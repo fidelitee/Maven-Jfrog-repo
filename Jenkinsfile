@@ -1,23 +1,20 @@
 node {
-    def server
-    def buildInfo
-    def rtMaven
+    def server = Artifactory.server('padmavathy.jfrog.io')
+    def buildInfo = Artifactory.newBuildInfo()
+    def rtMaven = Artifactory.newMavenBuild()
     
-    stage ('Clone') {
+    stage ('Checkout & Build') {
         git url: 'https://github.com/jfrogdev/project-examples.git'
     }
  
     stage ('Artifactory configuration') {
-        // Obtain an Artifactory server instance, defined in Jenkins --> Manage:
-        server = Artifactory.server SERVER_ID
-
-        rtMaven = Artifactory.newMavenBuild()
-        rtMaven.tool = MAVEN_TOOL // Tool name from Jenkins configuration
+        // Obtain an Artifactory server instance, defined in Jenkins --> Manage..:
+         
+        rtMaven.tool = 'maven3.5.2' // Tool name from Jenkins configuration
         rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
         rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
         rtMaven.deployer.deployArtifacts = false // Disable artifacts deployment during Maven run
 
-        buildInfo = Artifactory.newBuildInfo()
     }
  
     stage ('Test') {
