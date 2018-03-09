@@ -20,7 +20,8 @@ node {
     stage('SonarQube analysis') {
     withSonarQubeEnv('SonarCloud') {
       // requires SonarQube Scanner for Maven 3.2+
-      sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+      rtMaven.run pom: 'maven-example/pom.xml', goals: 'sonar:sonar'  
+      //sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
     }
   }
  
